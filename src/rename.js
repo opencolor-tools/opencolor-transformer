@@ -1,12 +1,13 @@
 import _ from 'lodash'
 import transformerFactory from './factory.js'
 
-const defaultOptions = {
+const defaultSearchAndReplaceOptions = {
   search: false,
-  replace: false,
-  transform: false,
-  filter: false,
-  scope: []
+  replace: false
+}
+
+const defaultCompundWordsOptions = {
+  transform: false
 }
 
 const validTransforms = {
@@ -17,40 +18,27 @@ const validTransforms = {
   'humanize': 'deburr'
 }
 
-const validScopes = ['Color', 'Reference', 'Palette']
-
-export default transformerFactory(defaultOptions, (tree, options) => {
-  if (options.transform && Object.keys(validTransforms).indexOf(options.transform) === -1) {
-    return Promise.reject(new Error(`Invalid option transform: ${options.transform} - choose one of ${Object.keys(validTransforms).join(', ')}`))
-  }
-  if (typeof options.scope === 'string') {
-    options.scope = [options.scope]
-  }
-  if (options.scope && options.scope.length && options.scope.some(scope => validScopes.indexOf(scope) === -1)) {
-    return Promise.reject(new Error(`Invalid option scope: ${options.scope.join(', ')} - valid elements are ${validScopes.join(', ')}`))
-  }
-  if (!options.search && !options.transform) {
+export const searchAndReplace = transformerFactory(defaultSearchAndReplaceOptions, (tree, options) => {
+  if (!options.search || !options.replace) {
     return Promise.resolve(tree)
   }
 
-  let isInSearchScope = () => true
-  if (options.filter) {
-    if (_.isRegExp(options.filter)) {
-      isInSearchScope = (term) => options.filter.test(term)
-    } else {
-      isInSearchScope = (term) => (term.indexOf(options.filter) !== -1)
-    }
-  }
   return new Promise((resolve, reject) => {
-    tree.traverseTree(options.scope, (entry) => {
-      if (!isInSearchScope(entry.name)) {
-        return
-      }
-      if (options.replace) {
-        entry.name = entry.name.replace(options.search, options.replace)
-      } else if (options.transform) {
-        entry.name = _[validTransforms[options.transform]](entry.name)
-      }
+    tree.transformEntries((entry) => {
+      entry.name = entry.name.replace(options.search, options.replace)
+    })
+    resolve(tree)
+  })
+})
+
+export const compoundWords = transformerFactory(defaultCompundWordsOptions, (tree, options) => {
+  if (options.transform && Object.keys(validTransforms).indexOf(options.transform) === -1) {
+    return Promise.reject(new Error(`Invalid option transform: ${options.transform} - choose one of ${Object.keys(validTransforms).join(', ')}`))
+  }
+
+  return new Promise((resolve, reject) => {
+    tree.transformEntries((entry) => {
+      entry.name = _[validTransforms[options.transform]](entry.name)
     })
     resolve(tree)
   })

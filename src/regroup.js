@@ -1,9 +1,7 @@
-import _ from 'lodash'
 import transformerFactory from './factory.js'
 
 const defaultGroupOptions = {
   spilt: ' ',
-  glue: ' ',
   direction: 'left',
   maxDepth: false
 }
@@ -11,7 +9,7 @@ const defaultGroupOptions = {
 const defaultFoldOptions = {
   glue: ' ',
   direction: 'left',
-  keepDepth: false
+  minDepth: false
 }
 
 const validDirections = ['left', 'right']
@@ -22,7 +20,7 @@ export const group = transformerFactory(defaultGroupOptions, (tree, options) => 
   }
   return new Promise((resolve, reject) => {
     const transformed = tree.clone()
-    tree.traverseTree(options.scope, (entry) => {
+    tree.transformEntries((entry) => {
       const parts = entry.name.split(options.split)
       let path = parts.join('.')
       if (options.maxDepth && parts.length > options.maxDepth) {
@@ -39,20 +37,20 @@ export const group = transformerFactory(defaultGroupOptions, (tree, options) => 
   })
 })
 
-export const fold = transformerFactory(defaultFoldOptions, (tree, options) => {
+export const flatten = transformerFactory(defaultFoldOptions, (tree, options) => {
   if (options.direction && validDirections.indexOf(options.direction) === -1) {
     return Promise.reject(new Error(`Invalid option direction: ${options.direction} - choose one of ${validDirections.join(', ')}`))
   }
   return new Promise((resolve, reject) => {
     const transformed = tree.clone()
-    tree.traverseTree(options.scope, (entry) => {
+    tree.transformEntries((entry) => {
       const parts = entry.path().split('.')
       let path = parts.join(options.glue)
-      if (options.keepDepth && parts.length > options.keepDepth) {
+      if (options.minDepth && parts.length > options.minDepth) {
         if (options.direction === 'left') {
-          path = parts.slice(0, options.keepDepth).join('.') + '.' + parts.slice(options.keepDepth).join(options.glue)
+          path = parts.slice(0, options.minDepth).join('.') + '.' + parts.slice(options.minDepth).join(options.glue)
         } else {
-          path = parts.slice(0, -1 * options.keepDepth).join(options.glue) + '.' + parts.slice(-1 * options.keepDepth).join('.')
+          path = parts.slice(0, -1 * options.minDepth).join(options.glue) + '.' + parts.slice(-1 * options.minDepth).join('.')
         }
       }
       transformed.remove(entry.path())

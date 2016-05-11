@@ -1,31 +1,29 @@
 /* eslint-env mocha */
 import chai, {expect} from 'chai'
 import oco from 'opencolor'
-import {group, fold} from '../src/regroup'
-import fs from 'fs'
-import path from 'path'
+import {group, flatten} from '../src/regroup'
 import chaiAsPromised from 'chai-as-promised'
 chai.use(chaiAsPromised)
 
 describe('Regroup Transformer', () => {
-  describe('Folding entries', () => {
+  describe('Flatten entries', () => {
     it('should reject unknown direction options', () => {
-      return expect(fold(oco.parse('color a: #FFF'), {direction: 'XXX'})).to.be.rejectedWith(Error)
+      return expect(flatten(oco.parse('color a: #FFF'), {direction: 'XXX'})).to.be.rejectedWith(Error)
     })
 
     it('should accept direction options', () => {
       return Promise.all([
-        expect(fold(oco.parse('colorA: #FFF'), {direction: 'left'})).to.be.fullfilled,
-        expect(fold(oco.parse('colorA: #FFF'), {direction: 'right'})).to.be.fullfilled
+        expect(flatten(oco.parse('colorA: #FFF'), {direction: 'left'})).to.be.fullfilled,
+        expect(flatten(oco.parse('colorA: #FFF'), {direction: 'right'})).to.be.fullfilled
       ])
     })
 
-    it('should fold', () => {
+    it('should flatten', () => {
       const tree = oco.parse(`
 level1:
   level2:
     color a: #FFF`)
-      return fold(tree, {
+      return flatten(tree, {
         glue: ' '
       }).then((transformed) => {
         expect(transformed.get('level1 level2 color a').type).to.equal('Color')
@@ -33,14 +31,14 @@ level1:
       })
     })
 
-    it('should fold but keep a certain depth', () => {
+    it('should flatten but keep a certain depth', () => {
       const tree = oco.parse(`
 level1:
   level2:
     color a: #FFF`)
-      return fold(tree, {
+      return flatten(tree, {
         glue: ' ',
-        keepDepth: 1
+        minDepth: 1
       }).then((transformed) => {
         expect(transformed.get('level1.level2 color a').type).to.equal('Color')
         expect(transformed.get('level1')).to.not.be.undefined
@@ -48,14 +46,14 @@ level1:
       })
     })
 
-    it('should fold but keep a certain depth', () => {
+    it('should flatten but keep a certain depth', () => {
       const tree = oco.parse(`
 level1:
   level2:
     color a: #FFF`)
-      return fold(tree, {
+      return flatten(tree, {
         glue: ' ',
-        keepDepth: 1,
+        minDepth: 1,
         direction: 'right'
       }).then((transformed) => {
         expect(transformed.get('level1 level2.color a').type).to.equal('Color')

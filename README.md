@@ -14,13 +14,29 @@ Looking for a UI to work with the transformers?
 
 ## Design
 
-All transformers expect two paramerters, a parsed oco tree and a configuration object. They return a promise that resolves with a manipulated cloned tree.
+All transformers expect two parameters, a parsed oco tree and a configuration object. They return a promise that resolves with a manipulated cloned tree.
 
 (Promised based API and clone vs. direct manipulation are up for discussion).
+
+## Default Options
+
+- `filter` _String or RegExp_<br>
+  filters entries before apply any transform
+- `scope` _String or Array_ limits the rename operation to a specific entry type
+
+  - Color
+  - Palette
+  - Reference
 
 ## Rename
 
 Rename entries in a palette.
+
+### Search and replace
+
+- `search` _String or Array_, `replace` _String_
+
+### Compound Words
 
 ```
 const tree = oco.parse('colorA: #FFF')
@@ -31,17 +47,6 @@ return rename(tree, {
 })
 ```
 
-- `filter` _String or RegExp_<br>
-  filters entries before apply the rename operation
-- `scope` _String or Array_ limits the rename operation to a specific entry type
-
-  - Color
-  - Palette
-  - Reference
-
-define either `search` and `replace` or `transform`
-
-- `search` _String or Array_, `replace` _String_
 - `transform` _String_<br>
   applies a transform
 
@@ -59,11 +64,48 @@ Regroup entries in a palette based on their name.
 
 Splits a entry name and creates group for each part of the name.
 
+- `spilt` _String_ · default: ' '
+- `direction` _String_ · default: 'left'
+- `maxDepth` _Integer_ or _Boolean_ · default: false
+
+### Flatten
+
+- `glue` _String_ · default: ' '
+- `direction` _String_ · default: 'left'
+- `minDepth` _Integer_ or _Boolean_ · default: false
+
 # Development
 
 ```
 npm install
 npm run test:watch
+```
+
+## How to create new transformer
+
+Use the transformer factory to create new transformer functions which introduces some convience. The factory will wrap your transform function. Once called it handles the default options and provide an oco Object which is a clone of the original tree passed to your function. The oco Object is enriched by a `transformEntries((entry) => {})` function - use it to iterate over all filtered entries ready for being transformed.
+
+```javascript
+import oco from 'opencolor'
+import transformerFactory from './src/factory.js'
+const exampleTranfromerDefaultOptions = {
+  append: ' - transformed'
+}
+const exampleTransformer = transformerFactory(exampleTranfromerDefaultOptions, (tree, options) => {
+  return new Promise((resolve, reject) => {
+    tree.transformEntries((entry) => {
+      entry.name = entry.name + options.append
+    })
+    resolve(tree)
+  })
+})
+
+exampleTransformer(oco.parse('color: #FF0000'), {
+  append: ' - red'
+}).then((transformed) => {
+  console.log(oco.render(transformed));
+  // color - red: #FF0000
+})
 ```
 
 [![js-standard-style](https://cdn.rawgit.com/feross/standard/master/badge.svg)](http://standardjs.com/)
