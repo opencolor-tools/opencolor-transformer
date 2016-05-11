@@ -1,4 +1,6 @@
 import _ from 'lodash'
+import transformerFactory from './factory.js'
+
 const defaultOptions = {
   search: false,
   replace: false,
@@ -17,15 +19,7 @@ const validTransforms = {
 
 const validScopes = ['Color', 'Reference', 'Palette']
 
-function transformer (defaultOptions, func) {
-  return (tree, configuration) => {
-    const transformed = tree.clone()
-    const options = Object.assign({}, defaultOptions, configuration)
-    return func(transformed, options)
-  }
-}
-
-export default transformer(defaultOptions, (tree, options) => {
+export default transformerFactory(defaultOptions, (tree, options) => {
   if (options.transform && Object.keys(validTransforms).indexOf(options.transform) === -1) {
     return Promise.reject(new Error(`Invalid option transform: ${options.transform} - choose one of ${Object.keys(validTransforms).join(', ')}`))
   }
