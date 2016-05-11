@@ -58,4 +58,4 @@ npm install
 npm run test:watch
 ```
 
-[![js-standard-style](https://cdn.rawgit.com/feross/standard/master/badge.svg)]
+[![js-standard-style](https://cdn.rawgit.com/feross/standard/master/badge.svg)](http://standardjs.com/)
