@@ -2,11 +2,12 @@
   "name": "opencolor-transformer",
   "version": "1.0.0",
   "description": "A set of configurable transformations for the open color file format",
-  "main": "index.js",
+  "main": "lib/index.js",
   "scripts": {
     "test": "mocha test --compilers js:babel-core/register",
     "test:watch": "mocha test -w --compilers js:babel-core/register",
-    "lint": "eslint src/ test/"
+    "lint": "eslint src/ test/",
+    "build": "babel --compilers js:babel-core/register -d lib/ src/"
   },
   "repository": {
     "type": "git",

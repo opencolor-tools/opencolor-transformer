@@ -1,4 +1,5 @@
 import _ from 'lodash'
+import {ntc} from './utils/ntc'
 import transformerFactory from './factory.js'
 
 const defaultSearchAndReplaceOptions = {
@@ -8,6 +9,11 @@ const defaultSearchAndReplaceOptions = {
 
 const defaultCompundWordsOptions = {
   transform: false
+}
+
+const defaultAutonameOptions = {
+  transform: false,
+  scope: ['Color']
 }
 
 const validTransforms = {
@@ -39,6 +45,15 @@ export const compoundWords = transformerFactory(defaultCompundWordsOptions, (tre
   return new Promise((resolve, reject) => {
     tree.transformEntries((entry) => {
       entry.name = _[validTransforms[options.transform]](entry.name)
+    })
+    resolve(tree)
+  })
+})
+
+export const autoname = transformerFactory(defaultAutonameOptions, (tree, options) => {
+  return new Promise((resolve, reject) => {
+    tree.transformEntries((entry) => {
+      entry.name = ntc.name(entry.hexcolor())[1]
     })
     resolve(tree)
   })

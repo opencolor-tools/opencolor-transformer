@@ -1,7 +1,7 @@
 /* eslint-env mocha */
 import chai, {expect} from 'chai'
 import oco from 'opencolor'
-import {searchAndReplace, compoundWords} from '../src/rename'
+import {searchAndReplace, compoundWords, autoname} from '../src/rename'
 import fs from 'fs'
 import path from 'path'
 import chaiAsPromised from 'chai-as-promised'
@@ -85,6 +85,15 @@ describe('Rename Transformer', () => {
         transform: 'capitalize'
       }).then((transformed) => {
         expect(transformed.get('Color a')).to.not.be.undefined
+      })
+    })
+  })
+
+  describe('Autoname', () => {
+    xit('should name colors', () => {
+      const tree = oco.parse('color a: #3778bf')
+      return autoname(tree).then((transformed) => {
+        expect(transformed.children[0].name).to.equal('windows blue')
       })
     })
   })
