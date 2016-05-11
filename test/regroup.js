@@ -1,14 +1,69 @@
 /* eslint-env mocha */
 import chai, {expect} from 'chai'
 import oco from 'opencolor'
-import {group} from '../src/regroup'
+import {group, fold} from '../src/regroup'
 import fs from 'fs'
 import path from 'path'
 import chaiAsPromised from 'chai-as-promised'
 chai.use(chaiAsPromised)
 
-describe.only('Regroup Transformer', () => {
-  describe('Splitting Names', () => {
+describe('Regroup Transformer', () => {
+  describe('Folding entries', () => {
+    it('should reject unknown direction options', () => {
+      return expect(fold(oco.parse('color a: #FFF'), {direction: 'XXX'})).to.be.rejectedWith(Error)
+    })
+
+    it('should accept direction options', () => {
+      return Promise.all([
+        expect(fold(oco.parse('colorA: #FFF'), {direction: 'left'})).to.be.fullfilled,
+        expect(fold(oco.parse('colorA: #FFF'), {direction: 'right'})).to.be.fullfilled
+      ])
+    })
+
+    it('should fold', () => {
+      const tree = oco.parse(`
+level1:
+  level2:
+    color a: #FFF`)
+      return fold(tree, {
+        glue: ' '
+      }).then((transformed) => {
+        expect(transformed.get('level1 level2 color a').type).to.equal('Color')
+        expect(transformed.get('level1')).to.be.undefined
+      })
+    })
+
+    it('should fold but keep a certain depth', () => {
+      const tree = oco.parse(`
+level1:
+  level2:
+    color a: #FFF`)
+      return fold(tree, {
+        glue: ' ',
+        keepDepth: 1
+      }).then((transformed) => {
+        expect(transformed.get('level1.level2 color a').type).to.equal('Color')
+        expect(transformed.get('level1')).to.not.be.undefined
+        expect(transformed.get('level1.level2')).to.be.undefined
+      })
+    })
+
+    it('should fold but keep a certain depth', () => {
+      const tree = oco.parse(`
+level1:
+  level2:
+    color a: #FFF`)
+      return fold(tree, {
+        glue: ' ',
+        keepDepth: 1,
+        direction: 'right'
+      }).then((transformed) => {
+        expect(transformed.get('level1 level2.color a').type).to.equal('Color')
+        expect(transformed.get('level1')).to.not.be.undefined
+      })
+    })
+  })
+  describe('Grouping entries', () => {
     it('should reject unknown direction options', () => {
       return expect(group(oco.parse('color a: #FFF'), {direction: 'XXX'})).to.be.rejectedWith(Error)
     })
