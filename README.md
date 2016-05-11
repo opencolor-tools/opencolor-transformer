@@ -34,9 +34,13 @@ Rename entries in a palette.
 
 ### Search and replace
 
-- `search` _String or Array_, `replace` _String_
+`searchAndReplace(tree, options)`
+
+- `search` _String or RegExp_, `replace` _String_
 
 ### Compound Words
+
+`compoundWords(tree, options)`
 
 ```
 const tree = oco.parse('colorA: #FFF')
@@ -62,6 +66,8 @@ Regroup entries in a palette based on their name.
 
 ### Group
 
+`group(tree, options)`
+
 Splits a entry name and creates group for each part of the name.
 
 - `spilt` _String_ · default: ' '
@@ -69,6 +75,8 @@ Splits a entry name and creates group for each part of the name.
 - `maxDepth` _Integer_ or _Boolean_ · default: false
 
 ### Flatten
+
+`flatten(tree, options)`
 
 - `glue` _String_ · default: ' '
 - `direction` _String_ · default: 'left'
