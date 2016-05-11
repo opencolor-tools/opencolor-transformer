@@ -51,6 +51,14 @@ define either `search` and `replace` or `transform`
   - lowdasherize
   - humanize
 
+## Regroup
+
+Regroup entries in a palette based on their name.
+
+### Group
+
+Splits a entry name and creates group for each part of the name.
+
 # Development
 
 ```
