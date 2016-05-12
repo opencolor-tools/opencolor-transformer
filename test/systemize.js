@@ -5,7 +5,7 @@ import {abstractRepeating} from '../src/systemize'
 import chaiAsPromised from 'chai-as-promised'
 chai.use(chaiAsPromised)
 
-describe.only('Systemize Transformer', () => {
+describe('Systemize Transformer', () => {
   describe('abstract repeating', () => {
     it('should create a new color entry for repeating color values', () => {
       var ocoString = `
