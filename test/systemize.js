@@ -6,8 +6,12 @@ import chaiAsPromised from 'chai-as-promised'
 chai.use(chaiAsPromised)
 
 describe('Systemize Transformer', () => {
+  describe('options', () => {
+    xit('should point to first occurence', () => {})
+    xit('should autoname extracted values', () => {})
+  })
   describe('abstract repeating', () => {
-    it('should create a new color entry for repeating color values', () => {
+    it('should extract repeating color values', () => {
       var ocoString = `
 color a: #FFF
 color b: #FFF
@@ -17,7 +21,7 @@ color b: #FFF
           expect(transformed.get('color1').hexcolor()).to.equal('#FFFFFF')
         })
     })
-    it('should replace existing color entries with a reference entry to the newly created color', () => {
+    it('should extract repeating color values and replace existing with a reference entry', () => {
       var ocoString = `
 color a: #FFF
 color b: #FFF
@@ -30,7 +34,7 @@ color b: #FFF
           expect(transformed.get('color b').refName).to.equal('color1')
         })
     })
-    it('should create more than one new color values for repeating color values', () => {
+    it('should extract more than one repeating color values', () => {
       var ocoString = `
 color a: #FFF
 color b: #000
@@ -43,7 +47,7 @@ color d: #000
           expect(transformed.get('color2').hexcolor()).to.equal('#000000')
         })
     })
-    it('should replace existing color entries with reference entries to the newly created colors', () => {
+    it('should extract more than one repeating color values and replace them with a reference entry', () => {
       var ocoString = `
 color a: #FFF
 color b: #000
