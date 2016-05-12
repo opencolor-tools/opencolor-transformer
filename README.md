@@ -82,6 +82,17 @@ Splits a entry name and creates group for each part of the name.
 - `direction` _String_ · default: 'left'
 - `minDepth` _Integer_ or _Boolean_ · default: false
 
+## Systemize
+
+### Search and replace
+
+`abstractRepeating(tree, options)`
+
+Extracts repeating color values and creates references.
+
+- `options` _Integer_ · default 2<br>
+  Number of occurences of a color value needed, before value will be abstracted.
+
 # Development
 
 ```

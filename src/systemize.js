@@ -1,4 +1,5 @@
 import transformerFactory from './factory.js'
+import oco from 'opencolor'
 
 const defaultAbstractRepeatingOptions = {
   occurences: 2
@@ -18,11 +19,19 @@ export const abstractRepeating = transformerFactory(defaultAbstractRepeatingOpti
         entryLookup[hexvalue].push(entry)
       }
     })
-    Object.keys(entryLookup).forEach((k) => {
+    Object.keys(entryLookup).forEach((k, index) => {
       if (entryLookup[k].length < options.occurences) {
         return
       }
-      tree.set('abstractedColor.color' + k, entryLookup[k][0])
+      const newColorEntry = entryLookup[k][0].clone()
+      newColorEntry.name = `color${index + 1}`
+      tree.addChild(newColorEntry, false, index)
+      const newPath = newColorEntry.path()
+      entryLookup[k].forEach((entry) => {
+        const path = entry.path()
+        const newRefrenceEntry = new oco.Reference(entry.name, newPath)
+        tree.set(path, newRefrenceEntry)
+      })
     })
     resolve(tree)
   })
