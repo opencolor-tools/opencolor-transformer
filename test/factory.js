@@ -63,6 +63,24 @@ describe('Transformer', () => {
         expect(transformed.get('palettenameA.colornameB - transformed')).to.not.be.undefined
       })
     })
-  })
+    it('should support enforcedOptions', () => {
+      const tree = oco.parse(simplePaletteOcoString)
 
+      const testTransformerWithEnforcedScope = transformerFactory({}, {scope: ['Color']}, (tree, options) => {
+        return new Promise((resolve, reject) => {
+          tree.transformEntries((entry) => {
+            entry.name = entry.name + ' - transformed'
+          })
+          resolve(tree)
+        })
+      })
+      return testTransformerWithEnforcedScope(tree, {
+        scope: ['Palette']
+      }).then((transformed) => {
+        expect(transformed.get('palettenameA')).to.not.be.undefined
+        expect(transformed.get('palettenameA.colornameA - transformed')).to.not.be.undefined
+        expect(transformed.get('palettenameA.colornameB - transformed')).to.not.be.undefined
+      })
+    })
+  })
 })

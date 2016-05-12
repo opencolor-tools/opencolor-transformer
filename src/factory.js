@@ -5,10 +5,14 @@ const defaultTransformerOptions = {
 
 const validScopes = ['Color', 'Reference', 'Palette']
 
-export default function (defaultOptions, func) {
+export default function (defaultOptions, enforcedOptions, func = null) {
+  if (func == null) {
+    func = enforcedOptions
+    enforcedOptions = {}
+  }
   return (tree, configuration) => {
     const toBeTransformed = tree.clone()
-    const options = Object.assign({}, defaultOptions, defaultTransformerOptions, configuration)
+    const options = Object.assign({}, defaultOptions, defaultTransformerOptions, configuration, enforcedOptions)
 
     if (typeof options.scope === 'string') {
       options.scope = [options.scope]

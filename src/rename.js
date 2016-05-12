@@ -56,7 +56,7 @@ export const compoundWords = transformerFactory(defaultCompundWordsOptions, (tre
   })
 })
 
-export const autoname = transformerFactory(defaultAutonameOptions, (tree, options) => {
+export const autoname = transformerFactory(defaultAutonameOptions, {scope: ['Color']}, (tree, options) => {
   return new Promise((resolve, reject) => {
     tree.transformEntries((entry) => {
       entry.name = ntc.name(entry.hexcolor())[1]
