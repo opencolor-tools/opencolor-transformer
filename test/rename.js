@@ -89,7 +89,7 @@ describe('Rename Transformer', () => {
     })
   })
 
-  describe.only('Autoname', () => {
+  describe('Autoname', () => {
     it('should name colors', () => {
       return Promise.all([
         autoname(oco.parse('color a: #3778bf')).then((transformed) => {
