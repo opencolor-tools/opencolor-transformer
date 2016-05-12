@@ -74,9 +74,9 @@ level1:
     })
 
     it('should create groups', () => {
-      const tree = oco.parse('color a: #FFF')
+      const tree = oco.parse('colorXXa: #FFF')
       return group(tree, {
-        split: ' '
+        separator: 'XX'
       }).then((transformed) => {
         expect(transformed.get('color').type).to.equal('Palette')
         expect(transformed.get('color.a')).to.not.be.undefined

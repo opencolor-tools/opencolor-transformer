@@ -1,7 +1,7 @@
 import transformerFactory from './factory.js'
 
 const defaultGroupOptions = {
-  spilt: ' ',
+  separator: ' ',
   direction: 'left',
   maxDepth: false
 }
@@ -21,13 +21,13 @@ export const group = transformerFactory(defaultGroupOptions, (tree, options) => 
   return new Promise((resolve, reject) => {
     const transformed = tree.clone()
     tree.transformEntries((entry) => {
-      const parts = entry.name.split(options.split)
+      const parts = entry.name.split(options.separator)
       let path = parts.join('.')
       if (options.maxDepth && parts.length > options.maxDepth) {
         if (options.direction === 'left') {
-          path = parts.slice(0, options.maxDepth).join('.') + '.' + parts.slice(options.maxDepth).join(options.split)
+          path = parts.slice(0, options.maxDepth).join('.') + '.' + parts.slice(options.maxDepth).join(options.separator)
         } else {
-          path = parts.slice(0, -1 * options.maxDepth).join(options.split) + '.' + parts.slice(-1 * options.maxDepth).join('.')
+          path = parts.slice(0, -1 * options.maxDepth).join(options.separator) + '.' + parts.slice(-1 * options.maxDepth).join('.')
         }
       }
       transformed.remove(entry.path())

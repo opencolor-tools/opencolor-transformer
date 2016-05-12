@@ -70,7 +70,7 @@ Regroup entries in a palette based on their name.
 
 Splits a entry name and creates group for each part of the name.
 
-- `spilt` _String_ · default: ' '
+- `separator` _String_ · default: ' '
 - `direction` _String_ · default: 'left'
 - `maxDepth` _Integer_ or _Boolean_ · default: false
 
