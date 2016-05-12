@@ -57,6 +57,15 @@ describe('Rename Transformer', () => {
       return compoundWords(tree, {
         transform: 'humanize'
       }).then((transformed) => {
+        expect(transformed.get('Cülá r')).to.not.be.undefined
+      })
+    })
+
+    it('should clean', () => {
+      const tree = oco.parse('CÜlá--r: #FFF')
+      return compoundWords(tree, {
+        transform: 'clean'
+      }).then((transformed) => {
         expect(transformed.get('CUla--r')).to.not.be.undefined
       })
     })

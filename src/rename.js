@@ -1,6 +1,7 @@
 import _ from 'lodash'
 import {ntc} from './utils/ntc'
 import transformerFactory from './factory.js'
+import humanizeString from 'humanize-string'
 
 const defaultSearchAndReplaceOptions = {
   search: false,
@@ -21,7 +22,8 @@ const validTransforms = {
   'capitalize': 'capitalize',
   'dasherize': 'kebabCase',
   'lowdasherize': 'snakeCase',
-  'humanize': 'deburr'
+  'clean': 'deburr',
+  'humanize': humanizeString
 }
 
 export const searchAndReplace = transformerFactory(defaultSearchAndReplaceOptions, (tree, options) => {
@@ -42,9 +44,13 @@ export const compoundWords = transformerFactory(defaultCompundWordsOptions, (tre
     return Promise.reject(new Error(`Invalid option transform: ${options.transform} - choose one of ${Object.keys(validTransforms).join(', ')}`))
   }
 
+  let transformFunction = validTransforms[options.transform]
+  if (_.isString(transformFunction)) {
+    transformFunction = _[transformFunction]
+  }
   return new Promise((resolve, reject) => {
     tree.transformEntries((entry) => {
-      entry.name = _[validTransforms[options.transform]](entry.name)
+      entry.name = transformFunction(entry.name)
     })
     resolve(tree)
   })

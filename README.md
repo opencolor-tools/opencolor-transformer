@@ -59,6 +59,7 @@ return rename(tree, {
   - dasherize
   - lowdasherize
   - humanize
+  - clean
 
 ## Regroup
 
