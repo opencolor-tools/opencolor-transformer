@@ -31,7 +31,7 @@ Sample Usage:
 
 */
 
-export var ntc = {
+var ntc = {
 
   init: function() {
     var color, rgb, hsl;
@@ -40,7 +40,9 @@ export var ntc = {
       color = "#" + ntc.names[i][0];
       rgb = ntc.rgb(color);
       hsl = ntc.hsl(color);
+      ntc.names[i][0] = ntc.names[i][0].toUpperCase();
       ntc.names[i].push(rgb[0], rgb[1], rgb[2], hsl[0], hsl[1], hsl[2]);
+
     }
   },
 
@@ -1066,7 +1068,7 @@ export var ntc = {
     ['7e1e9c', 'purple'],
   ],
 
-  ntc_names: [
+  _names: [
 ["000000", "Black"],
 ["000080", "Navy Blue"],
 ["0000C8", "Dark Blue"],
@@ -2636,3 +2638,6 @@ export var ntc = {
 ]
 
 }
+
+ntc.init();
+export { ntc };

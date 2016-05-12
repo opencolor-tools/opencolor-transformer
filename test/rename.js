@@ -89,12 +89,22 @@ describe('Rename Transformer', () => {
     })
   })
 
-  describe('Autoname', () => {
-    xit('should name colors', () => {
-      const tree = oco.parse('color a: #3778bf')
-      return autoname(tree).then((transformed) => {
-        expect(transformed.children[0].name).to.equal('windows blue')
-      })
+  describe.only('Autoname', () => {
+    it('should name colors', () => {
+      return Promise.all([
+        autoname(oco.parse('color a: #3778bf')).then((transformed) => {
+          expect(transformed.children[0].name).to.equal('windows blue')
+        }),
+        autoname(oco.parse('color a: #3778be')).then((transformed) => {
+          expect(transformed.children[0].name).to.equal('windows blue')
+        }),
+        autoname(oco.parse('color a: #3778bd')).then((transformed) => {
+          expect(transformed.children[0].name).to.equal('windows blue')
+        }),
+        autoname(oco.parse('color a: #FFF')).then((transformed) => {
+          expect(transformed.children[0].name).to.equal('white')
+        })
+      ])
     })
   })
 })
