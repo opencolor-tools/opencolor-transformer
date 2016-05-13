@@ -5,12 +5,13 @@ const defaultTransformerOptions = {
 
 const validScopes = ['Color', 'Reference', 'Palette']
 
-export default function (defaultOptions, enforcedOptions, func = null) {
+export const createTransformer = function (defaultOptions, enforcedOptions, func = null) {
   if (func == null) {
     func = enforcedOptions
     enforcedOptions = {}
   }
-  return (tree, configuration) => {
+
+  const transformer = (tree, configuration) => {
     const toBeTransformed = tree.clone()
     const options = Object.assign({}, defaultOptions, defaultTransformerOptions, configuration, enforcedOptions)
 
@@ -37,5 +38,19 @@ export default function (defaultOptions, enforcedOptions, func = null) {
       })
     }
     return func(toBeTransformed, options)
+  }
+
+  transformer.configure = function (options) {
+    return createConfigurableTransformer(transformer)(options)
+  }
+  return transformer
+}
+
+export const createConfigurableTransformer = function (transformer) {
+  return function (options) {
+    return function (tree) {
+      console.log('inside configured transformer', tree)
+      return transformer(tree, options)
+    }
   }
 }

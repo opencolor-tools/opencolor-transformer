@@ -1,13 +1,13 @@
 /* eslint-env mocha */
 import chai, {expect} from 'chai'
 import oco from 'opencolor'
-import transformerFactory from '../src/factory'
+import {createTransformer} from '../src/factory'
 import fs from 'fs'
 import path from 'path'
 import chaiAsPromised from 'chai-as-promised'
 chai.use(chaiAsPromised)
 
-const testTransformer = transformerFactory({}, (tree, options) => {
+const testTransformer = createTransformer({}, (tree, options) => {
   return new Promise((resolve, reject) => {
     tree.transformEntries((entry) => {
       entry.name = entry.name + ' - transformed'
@@ -16,8 +16,18 @@ const testTransformer = transformerFactory({}, (tree, options) => {
   })
 })
 
-describe('Transformer', () => {
+describe('Transformer Factory', () => {
   const simplePaletteOcoString = fs.readFileSync(path.join(__dirname, 'fixtures', 'simple-palette.oco'))
+  describe('Configurable Transformer', () => {
+    it('should be configurabel', () => {
+      var configuredTransformer = testTransformer.configure({})
+      expect(configuredTransformer(oco.parse('colorA: #FFF'))).to.be.fullfilled
+    })
+    it('should be configurabel with options', () => {
+      var configuredTransformer = testTransformer.configure({scope: 'XXX'})
+      expect(configuredTransformer(oco.parse('colorA: #FFF'))).to.be.rejectedWith(Error)
+    })
+  })
   describe('Scoping and Filters', () => {
     it('should allow scoping on Color, Palette and Reference', () => {
       return Promise.all([
@@ -66,7 +76,7 @@ describe('Transformer', () => {
     it('should support enforcedOptions', () => {
       const tree = oco.parse(simplePaletteOcoString)
 
-      const testTransformerWithEnforcedScope = transformerFactory({}, {scope: ['Color']}, (tree, options) => {
+      const testTransformerWithEnforcedScope = createTransformer({}, {scope: ['Color']}, (tree, options) => {
         return new Promise((resolve, reject) => {
           tree.transformEntries((entry) => {
             entry.name = entry.name + ' - transformed'

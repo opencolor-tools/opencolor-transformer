@@ -1,6 +1,6 @@
 import _ from 'lodash'
 import {ntc} from './utils/ntc'
-import transformerFactory from './factory.js'
+import {createTransformer} from '../src/factory'
 import humanizeString from 'humanize-string'
 
 const defaultSearchAndReplaceOptions = {
@@ -26,7 +26,7 @@ const validTransforms = {
   'humanize': humanizeString
 }
 
-export const searchAndReplace = transformerFactory(defaultSearchAndReplaceOptions, (tree, options) => {
+export const searchAndReplace = createTransformer(defaultSearchAndReplaceOptions, (tree, options) => {
   if (!options.search || !options.replace) {
     return Promise.resolve(tree)
   }
@@ -39,7 +39,7 @@ export const searchAndReplace = transformerFactory(defaultSearchAndReplaceOption
   })
 })
 
-export const compoundWords = transformerFactory(defaultCompundWordsOptions, (tree, options) => {
+export const compoundWords = createTransformer(defaultCompundWordsOptions, (tree, options) => {
   if (options.transform && Object.keys(validTransforms).indexOf(options.transform) === -1) {
     return Promise.reject(new Error(`Invalid option transform: ${options.transform} - choose one of ${Object.keys(validTransforms).join(', ')}`))
   }
@@ -56,7 +56,7 @@ export const compoundWords = transformerFactory(defaultCompundWordsOptions, (tre
   })
 })
 
-export const autoname = transformerFactory(defaultAutonameOptions, {scope: ['Color']}, (tree, options) => {
+export const autoname = createTransformer(defaultAutonameOptions, {scope: ['Color']}, (tree, options) => {
   return new Promise((resolve, reject) => {
     tree.transformEntries((entry) => {
       entry.name = ntc.name(entry.hexcolor())[1]

@@ -1,11 +1,11 @@
-import transformerFactory from './factory.js'
+import {createTransformer} from '../src/factory'
 import oco from 'opencolor'
 
 const defaultAbstractRepeatingOptions = {
   occurences: 2
 }
 
-export const abstractRepeating = transformerFactory(defaultAbstractRepeatingOptions, (tree, options) => {
+export const abstractRepeating = createTransformer(defaultAbstractRepeatingOptions, (tree, options) => {
   return new Promise((resolve, reject) => {
     let entryLookup = {}
     tree.transformEntries((entry) => {

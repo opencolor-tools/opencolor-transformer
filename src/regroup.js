@@ -1,4 +1,4 @@
-import transformerFactory from './factory.js'
+import {createTransformer} from '../src/factory'
 
 const defaultGroupOptions = {
   separator: ' ',
@@ -14,7 +14,7 @@ const defaultFoldOptions = {
 
 const validDirections = ['left', 'right']
 
-export const group = transformerFactory(defaultGroupOptions, (tree, options) => {
+export const group = createTransformer(defaultGroupOptions, (tree, options) => {
   if (options.direction && validDirections.indexOf(options.direction) === -1) {
     return Promise.reject(new Error(`Invalid option direction: ${options.direction} - choose one of ${validDirections.join(', ')}`))
   }
@@ -37,7 +37,7 @@ export const group = transformerFactory(defaultGroupOptions, (tree, options) => 
   })
 })
 
-export const flatten = transformerFactory(defaultFoldOptions, (tree, options) => {
+export const flatten = createTransformer(defaultFoldOptions, (tree, options) => {
   if (options.direction && validDirections.indexOf(options.direction) === -1) {
     return Promise.reject(new Error(`Invalid option direction: ${options.direction} - choose one of ${validDirections.join(', ')}`))
   }
