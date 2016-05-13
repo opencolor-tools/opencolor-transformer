@@ -1,4 +1,4 @@
-import {createTransformer} from '../src/factory'
+import {createTransformer} from './factory'
 
 const defaultGroupOptions = {
   separator: ' ',

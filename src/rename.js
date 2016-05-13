@@ -1,6 +1,6 @@
 import _ from 'lodash'
 import {ntc} from './utils/ntc'
-import {createTransformer} from '../src/factory'
+import {createTransformer} from './factory'
 import humanizeString from 'humanize-string'
 
 const defaultSearchAndReplaceOptions = {

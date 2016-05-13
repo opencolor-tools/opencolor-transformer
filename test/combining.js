@@ -14,14 +14,14 @@ IKEAYellow: #ffcc00
 IKEABlue: #003399
 `
     const tree = oco.parse(ocoString)
-    return compoundWords(tree, {transform: 'humanize'})
+    return compoundWords.configure({transform: 'humanize'})(tree)
       .then(group.configure({separator: ' ', maxDepth: 1}))
       .then(autoname.configure({filter: /color.*/}))
-      .then((transfromed) => {
-        expect(transfromed.get('AmazonColor0')).to.be.undefined
-        expect(transfromed.get('Amazon').type).to.equal('Palette')
-        expect(transfromed.get('Amazon').children).to.have.length(2)
-        expect(transfromed.get('Ikea.yellow').hexcolor()).to.equal('#FFCC00')
+      .then((transformed) => {
+        expect(transformed.get('AmazonColor0')).to.be.undefined
+        expect(transformed.get('Amazon').type).to.equal('Palette')
+        expect(transformed.get('Amazon').children).to.have.length(2)
+        expect(transformed.get('Ikea.yellow').hexcolor()).to.equal('#FFCC00')
       })
   })
 })
