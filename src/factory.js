@@ -49,7 +49,6 @@ export const createTransformer = function (defaultOptions, enforcedOptions, func
 export const createConfigurableTransformer = function (transformer) {
   return function (options) {
     return function (tree) {
-      console.log('inside configured transformer', tree)
       return transformer(tree, options)
     }
   }
