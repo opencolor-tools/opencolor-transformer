@@ -14,7 +14,7 @@ IKEAYellow: #ffcc00
 IKEABlue: #003399
 `
     const tree = oco.parse(ocoString)
-    compoundWords(tree, {transform: 'humanize'})
+    return compoundWords(tree, {transform: 'humanize'})
       .then(group.configure({separator: ' ', maxDepth: 1}))
       .then(autoname.configure({filter: /color.*/}))
       .then((transfromed) => {
