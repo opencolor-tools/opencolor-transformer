@@ -37,7 +37,7 @@
   "dependencies": {
     "humanize-string": "^1.0.1",
     "lodash": "^4.12.0",
-    "opencolor": "github:opencolor-tools/opencolor-js#palette-type"
+    "opencolor": "github:opencolor-tools/opencolor-js#fc00d7ed5f228f733fe8801485d2bbb5f866861b"
   },
   "config": {
     "pre-git": {
