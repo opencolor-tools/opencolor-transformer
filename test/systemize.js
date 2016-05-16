@@ -77,5 +77,40 @@ color e: #000
           expect(transformed.get('color b').type).to.equal('Color')
         })
     })
+    it('should autoname extracted values', () => {
+      var ocoString = `
+color a: #3778BF
+color b: #000
+color c: #3778BF
+color d: #3778BF
+color e: #000
+`
+      return abstractRepeating(oco.parse(ocoString), {autoname: true})
+        .then((transformed) => {
+          expect(transformed.get('color a').type).to.equal('Reference')
+          expect(transformed.get('color a').refName).to.equal('windows blue')
+          expect(transformed.get('color b').type).to.equal('Reference')
+          expect(transformed.get('color b').refName).to.equal('black')
+        })
+    })
+    it('should autoname extracted values without duplicate names', () => {
+      var ocoString = `
+color a: #3778BF
+color b: #3778BE
+color c: #3778BF
+color d: #3778BE
+color e: #3778BD
+color f: #3778BD
+`
+      return abstractRepeating(oco.parse(ocoString), {autoname: true})
+        .then((transformed) => {
+          expect(transformed.get('color a').type).to.equal('Reference')
+          expect(transformed.get('color a').refName).to.equal('windows blue')
+          expect(transformed.get('color b').type).to.equal('Reference')
+          expect(transformed.get('color b').refName).to.equal('windows blue 1')
+          expect(transformed.get('color e').type).to.equal('Reference')
+          expect(transformed.get('color e').refName).to.equal('windows blue 2')
+        })
+    })
   })
 })
