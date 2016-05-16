@@ -115,5 +115,21 @@ describe('Rename Transformer', () => {
         })
       ])
     })
+    it('should support name pool ntc', () => {
+      return Promise.all([
+        autoname(oco.parse('color a: #3778bf'), {pool: 'ntc'}).then((transformed) => {
+          expect(transformed.children[0].name).to.equal('Boston Blue')
+        }),
+        autoname(oco.parse('color a: #3778be'), {pool: 'ntc'}).then((transformed) => {
+          expect(transformed.children[0].name).to.equal('Boston Blue')
+        }),
+        autoname(oco.parse('color a: #3778bd'), {pool: 'ntc'}).then((transformed) => {
+          expect(transformed.children[0].name).to.equal('Boston Blue')
+        }),
+        autoname(oco.parse('color a: #FFF')).then((transformed) => {
+          expect(transformed.children[0].name).to.equal('white')
+        })
+      ])
+    })
   })
 })

@@ -14,8 +14,10 @@ const defaultCompundWordsOptions = {
 
 const defaultAutonameOptions = {
   transform: false,
-  scope: ['Color']
+  pool: 'xkcd'
 }
+
+const validNamePools = ['ntc', 'xkcd']
 
 const validTransforms = {
   'camelize': 'camelCase',
@@ -23,6 +25,8 @@ const validTransforms = {
   'dasherize': 'kebabCase',
   'lowdasherize': 'snakeCase',
   'clean': 'deburr',
+  'uppercase': (s) => s.toUpperCase(),
+  'lowercase': (s) => s.toLowerCase(),
   'humanize': humanizeString
 }
 
@@ -57,6 +61,10 @@ export const compoundWords = createTransformer(defaultCompundWordsOptions, (tree
 })
 
 export const autoname = createTransformer(defaultAutonameOptions, {scope: ['Color']}, (tree, options) => {
+  if (validNamePools.indexOf(options.pool) === -1) {
+    return Promise.reject(new Error(`Invalid option pool: ${options.pool} - choose one of ${validNamePools.join(', ')}`))
+  }
+  ntc.init(options.pool)
   return new Promise((resolve, reject) => {
     tree.transformEntries((entry) => {
       entry.name = ntc.name(entry.hexcolor())[1]

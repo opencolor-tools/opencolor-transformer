@@ -61,6 +61,15 @@ return rename(tree, {
   - humanize
   - clean
 
+### Autoname
+
+`autoname(tree, options)`
+
+- `pool` _String_ defines source for naming information
+
+  - xkcd
+  - ntc
+
 ## Regroup
 
 Regroup entries in a palette based on their name.

@@ -31,10 +31,16 @@ Sample Usage:
 
 */
 
+var validPools = ['ntc', 'xkcd'];
+
 var ntc = {
 
-  init: function() {
+  init: function(pool) {
     var color, rgb, hsl;
+    if(validPools.indexOf(pool) == -1) {
+      throw 'ntc, invalid name pool ' + pool;
+    }
+    ntc.names = ntc['names_' + pool];
     for(var i = 0; i < ntc.names.length; i++)
     {
       color = "#" + ntc.names[i][0];
@@ -116,7 +122,7 @@ var ntc = {
   },
 
   // http://xkcd.com/color/rgb.txt
-  names: [
+  names_xkcd: [
     ['acc2d9', 'cloudy blue'],
     ['56ae57', 'dark pastel green'],
     ['b2996e', 'dust'],
@@ -1068,7 +1074,7 @@ var ntc = {
     ['7e1e9c', 'purple'],
   ],
 
-  _names: [
+  names_ntc: [
 ["000000", "Black"],
 ["000080", "Navy Blue"],
 ["0000C8", "Dark Blue"],
@@ -2639,5 +2645,4 @@ var ntc = {
 
 }
 
-ntc.init();
 export { ntc };
