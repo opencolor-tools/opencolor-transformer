@@ -21,6 +21,18 @@ color b: #FFF
           expect(transformed.get('color1').hexcolor()).to.equal('#FFFFFF')
         })
     })
+    it('should add extracted colors at beginning of palette', () => {
+      var ocoString = `
+color a: #FFF
+color b: #000
+`
+      return abstractRepeating(oco.parse(ocoString), {occurences: 1})
+        .then((transformed) => {
+          expect(transformed.children).to.have.length(4)
+          expect(transformed.children[0].name).to.equal('color1')
+          expect(transformed.children[1].name).to.equal('color2')
+        })
+    })
     it('should extract repeating color values and replace existing with a reference entry', () => {
       var ocoString = `
 color a: #FFF

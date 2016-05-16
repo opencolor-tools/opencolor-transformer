@@ -36,6 +36,7 @@ export const abstractRepeating = createTransformer(defaultAbstractRepeatingOptio
         entryLookup[hexvalue].push(entry)
       }
     })
+    let addedColors = 0
     Object.keys(entryLookup).forEach((k, index) => {
       if (entryLookup[k].length < options.occurences) {
         return
@@ -43,7 +44,7 @@ export const abstractRepeating = createTransformer(defaultAbstractRepeatingOptio
       const newColorEntry = entryLookup[k][0].clone()
       newColorEntry.name = name(newColorEntry.hexcolor(), index)
 
-      tree.addChild(newColorEntry, false, index)
+      tree.addChild(newColorEntry, false, addedColors++)
       const newPath = newColorEntry.path()
       entryLookup[k].forEach((entry) => {
         const path = entry.path()
