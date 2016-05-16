@@ -58,6 +58,8 @@ return rename(tree, {
   - capitalize
   - dasherize
   - lowdasherize
+  - uppercase
+  - lowercase
   - humanize
   - clean
 

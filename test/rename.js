@@ -96,6 +96,24 @@ describe('Rename Transformer', () => {
         expect(transformed.get('Color a')).to.not.be.undefined
       })
     })
+
+    it('should uppercase', () => {
+      const tree = oco.parse('color a: #FFF')
+      return compoundWords(tree, {
+        transform: 'uppercase'
+      }).then((transformed) => {
+        expect(transformed.get('COLOR A')).to.not.be.undefined
+      })
+    })
+
+    it('should lowercase', () => {
+      const tree = oco.parse('ColoR A: #FFF')
+      return compoundWords(tree, {
+        transform: 'lowercase'
+      }).then((transformed) => {
+        expect(transformed.get('color a')).to.not.be.undefined
+      })
+    })
   })
 
   describe('Autoname', () => {
