@@ -21,7 +21,7 @@ const validNamePools = ['ntc', 'xkcd']
 
 const validTransforms = {
   'camelize': 'camelCase',
-  'capitalize': 'capitalize',
+  'capitalize': 'startCase',
   'dasherize': 'kebabCase',
   'lowdasherize': 'snakeCase',
   'clean': 'deburr',

@@ -93,7 +93,7 @@ describe('Rename Transformer', () => {
       return compoundWords(tree, {
         transform: 'capitalize'
       }).then((transformed) => {
-        expect(transformed.get('Color a')).to.not.be.undefined
+        expect(transformed.get('Color A')).to.not.be.undefined
       })
     })
 
