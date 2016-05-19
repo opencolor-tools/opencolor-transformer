@@ -7,7 +7,7 @@ const defaultAbstractRepeatingOptions = {
   autoname: false
 }
 
-export const abstractRepeating = createTransformer(defaultAbstractRepeatingOptions, (tree, options) => {
+export const abstractRepeating = createTransformer(defaultAbstractRepeatingOptions, {scope: ['Color']}, (tree, options) => {
   let name = function (value, index) {
     return `color${index + 1}`
   }

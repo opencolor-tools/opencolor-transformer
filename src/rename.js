@@ -9,7 +9,7 @@ const defaultSearchAndReplaceOptions = {
 }
 
 const defaultCompundWordsOptions = {
-  transform: false
+  transform: 'humanize'
 }
 
 const defaultAutonameOptions = {
@@ -44,7 +44,7 @@ export const searchAndReplace = createTransformer(defaultSearchAndReplaceOptions
 })
 
 export const compoundWords = createTransformer(defaultCompundWordsOptions, (tree, options) => {
-  if (options.transform && Object.keys(validTransforms).indexOf(options.transform) === -1) {
+  if (!options.transform || Object.keys(validTransforms).indexOf(options.transform) === -1) {
     return Promise.reject(new Error(`Invalid option transform: ${options.transform} - choose one of ${Object.keys(validTransforms).join(', ')}`))
   }
 
