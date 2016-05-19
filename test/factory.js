@@ -28,6 +28,22 @@ describe('Transformer Factory', () => {
       expect(configuredTransformer(oco.parse('colorA: #FFF'))).to.be.rejectedWith(Error)
     })
   })
+  describe('Transformed Trees', () => {
+    it('should keep metadata', () => {
+      var configuredTransformer = testTransformer.configure({})
+      var ocoString = `
+ns/metakey: value
+palette:
+  ns/metakey: value
+  one: #111111
+`
+      var tree = oco.parse(ocoString)
+      return configuredTransformer(tree).then((transformedTree) => {
+        expect(transformedTree.metadata).to.deep.equal({'ns/metakey': 'value'})
+        expect(transformedTree.get('palette - transformed').metadata).to.deep.equal({'ns/metakey': 'value'})
+      })
+    })
+  })
   describe('Scoping and Filters', () => {
     it('should allow scoping on Color, Palette and Reference', () => {
       return Promise.all([
