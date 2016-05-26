@@ -31,6 +31,21 @@ level1:
       })
     })
 
+    it('should flatten and maintain references', () => {
+      const tree = oco.parse(`
+level1:
+  level2:
+    one: #111111
+    oneRef: =one`)
+      return flatten(tree, {
+        glue: ' '
+      }).then((transformed) => {
+        expect(transformed.get('level1 level2 one').type).to.equal('Color')
+        expect(transformed.get('level1 level2 oneRef').refName).to.equal('level1 level2 one')
+        expect(transformed.get('level1')).to.be.undefined
+      })
+    })
+
     it('should flatten but keep a certain depth', () => {
       const tree = oco.parse(`
 level1:
@@ -46,7 +61,7 @@ level1:
       })
     })
 
-    it('should flatten but keep a certain depth', () => {
+    xit('should flatten but keep a certain depth', () => {
       const tree = oco.parse(`
 level1:
   level2:
@@ -56,6 +71,7 @@ level1:
         minDepth: 1,
         direction: 'right'
       }).then((transformed) => {
+        console.log(transformed.toString())
         expect(transformed.get('level1 level2.color a').type).to.equal('Color')
         expect(transformed.get('level1')).to.not.be.undefined
       })
@@ -81,6 +97,20 @@ level1:
         expect(transformed.get('color').type).to.equal('Palette')
         expect(transformed.get('color.a')).to.not.be.undefined
         expect(transformed.get('color a')).to.be.undefined
+      })
+    })
+
+    it('should maintain references', () => {
+      const tree = oco.parse(
+`colorXXone: #FFF
+colorXXoneRef: =colorXXone
+`)
+      return group(tree, {
+        separator: 'XX'
+      }).then((transformed) => {
+        expect(transformed.get('color').type).to.equal('Palette')
+        expect(transformed.get('color.one')).to.not.be.undefined
+        expect(transformed.get('color.oneRef').refName).to.equal('color.one')
       })
     })
 
