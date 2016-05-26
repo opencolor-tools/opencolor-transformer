@@ -4,7 +4,8 @@ import oco from 'opencolor'
 
 const defaultAbstractRepeatingOptions = {
   occurences: 2,
-  autoname: false
+  autoname: false,
+  palette: 'extracted'
 }
 
 export const abstractRepeating = createTransformer(defaultAbstractRepeatingOptions, {scope: ['Color']}, (tree, options) => {
@@ -37,6 +38,16 @@ export const abstractRepeating = createTransformer(defaultAbstractRepeatingOptio
       }
     })
     let addedColors = 0
+    let paletteForExtractedColors = tree
+    if (options.palette) {
+      let existingPalette = tree.get(options.palette)
+      if (existingPalette) {
+        paletteForExtractedColors = existingPalette
+      } else {
+        paletteForExtractedColors = new oco.Entry(options.palette.replace('.', ''), [], 'Palette')
+        tree.addChild(paletteForExtractedColors, false, 0)
+      }
+    }
     Object.keys(entryLookup).forEach((k, index) => {
       if (entryLookup[k].length < options.occurences) {
         return
@@ -44,7 +55,7 @@ export const abstractRepeating = createTransformer(defaultAbstractRepeatingOptio
       const newColorEntry = entryLookup[k][0].clone()
       newColorEntry.name = name(newColorEntry.hexcolor(), index)
 
-      tree.addChild(newColorEntry, false, addedColors++)
+      paletteForExtractedColors.addChild(newColorEntry, false, addedColors++)
       const newPath = newColorEntry.path()
       entryLookup[k].forEach((entry) => {
         const path = entry.path()

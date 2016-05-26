@@ -11,12 +11,23 @@ describe('Systemize Transformer', () => {
     xit('should autoname extracted values', () => {})
   })
   describe('abstract repeating', () => {
+    it('should extract repeating color values into a palette', () => {
+      var ocoString = `
+color a: #FFF
+color b: #FFF
+`
+      return abstractRepeating(oco.parse(ocoString), {palette: 'palette'})
+        .then((transformed) => {
+          expect(transformed.get('palette.color1').hexcolor()).to.equal('#FFFFFF')
+          expect(transformed.get('color a').refName).to.equal('palette.color1')
+        })
+    })
     it('should extract repeating color values', () => {
       var ocoString = `
 color a: #FFF
 color b: #FFF
 `
-      return abstractRepeating(oco.parse(ocoString))
+      return abstractRepeating(oco.parse(ocoString), {palette: false})
         .then((transformed) => {
           expect(transformed.get('color1').hexcolor()).to.equal('#FFFFFF')
         })
@@ -26,7 +37,7 @@ color b: #FFF
 color a: #FFF
 color b: #000
 `
-      return abstractRepeating(oco.parse(ocoString), {occurences: 1})
+      return abstractRepeating(oco.parse(ocoString), {occurences: 1, palette: false})
         .then((transformed) => {
           expect(transformed.children).to.have.length(4)
           expect(transformed.children[0].name).to.equal('color1')
@@ -38,7 +49,7 @@ color b: #000
 color a: #FFF
 color b: #FFF
 `
-      return abstractRepeating(oco.parse(ocoString))
+      return abstractRepeating(oco.parse(ocoString), {palette: false})
         .then((transformed) => {
           expect(transformed.get('color a').type).to.equal('Reference')
           expect(transformed.get('color a').refName).to.equal('color1')
@@ -53,7 +64,7 @@ color b: #000
 color c: #FFF
 color d: #000
 `
-      return abstractRepeating(oco.parse(ocoString))
+      return abstractRepeating(oco.parse(ocoString), {palette: false})
         .then((transformed) => {
           expect(transformed.get('color1').hexcolor()).to.equal('#FFFFFF')
           expect(transformed.get('color2').hexcolor()).to.equal('#000000')
@@ -66,7 +77,7 @@ color b: #000
 color c: #FFF
 color d: #000
 `
-      return abstractRepeating(oco.parse(ocoString))
+      return abstractRepeating(oco.parse(ocoString), {palette: false})
         .then((transformed) => {
           expect(transformed.get('color a').type).to.equal('Reference')
           expect(transformed.get('color a').refName).to.equal('color1')
@@ -82,7 +93,7 @@ color c: #FFF
 color d: #FFF
 color e: #000
 `
-      return abstractRepeating(oco.parse(ocoString), {occurences: 3})
+      return abstractRepeating(oco.parse(ocoString), {occurences: 3, palette: false})
         .then((transformed) => {
           expect(transformed.get('color a').type).to.equal('Reference')
           expect(transformed.get('color a').refName).to.equal('color1')
@@ -97,7 +108,7 @@ color c: #3778BF
 color d: #3778BF
 color e: #000
 `
-      return abstractRepeating(oco.parse(ocoString), {autoname: true})
+      return abstractRepeating(oco.parse(ocoString), {autoname: true, palette: false})
         .then((transformed) => {
           expect(transformed.get('color a').type).to.equal('Reference')
           expect(transformed.get('color a').refName).to.equal('windows blue')
@@ -114,7 +125,7 @@ color d: #3778BE
 color e: #3778BD
 color f: #3778BD
 `
-      return abstractRepeating(oco.parse(ocoString), {autoname: true})
+      return abstractRepeating(oco.parse(ocoString), {autoname: true, palette: false})
         .then((transformed) => {
           expect(transformed.get('color a').type).to.equal('Reference')
           expect(transformed.get('color a').refName).to.equal('windows blue')
