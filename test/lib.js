@@ -21,6 +21,9 @@ describe('Transformer API', () => {
   it('should respond to abstractRepeating', () => {
     expect(transformers).to.respondTo('abstractRepeating')
   })
+  it('should respond to sortByHue', () => {
+    expect(transformers).to.respondTo('sortByHue')
+  })
   it('all transformer should be configurable', () => {
     Object.keys(transformers).forEach((key) => {
       expect(transformers[key]).to.have.ownProperty('configure')
