@@ -1,7 +1,7 @@
 import {group, flatten} from './regroup'
 import {searchAndReplace, compoundWords, autoname} from './rename'
 import {abstractRepeating} from './systemize'
-import {sortByHue} from './sort'
+import {sort} from './sort'
 
 export {
   group,
@@ -10,5 +10,5 @@ export {
   compoundWords,
   autoname,
   abstractRepeating,
-  sortByHue
+  sort
 }
