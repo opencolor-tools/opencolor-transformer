@@ -1,6 +1,6 @@
 {
   "name": "opencolor-transformer",
-  "version": "1.1.0",
+  "version": "1.2.0",
   "description": "A set of configurable transformations for the open color file format",
   "main": "lib/index.js",
   "scripts": {
