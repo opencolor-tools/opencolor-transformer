@@ -17,7 +17,7 @@ const defaultAutonameOptions = {
   pool: 'xkcd'
 }
 
-const validNamePools = ['ntc', 'xkcd']
+const validNamePools = ['ntc', 'xkcd', 'css']
 
 const validTransforms = {
   'camelize': 'camelCase',
