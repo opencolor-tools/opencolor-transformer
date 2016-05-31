@@ -37,7 +37,7 @@ export const searchAndReplace = createTransformer(defaultSearchAndReplaceOptions
 
   return new Promise((resolve, reject) => {
     tree.transformEntries((entry) => {
-      entry.name = entry.name.replace(options.search, options.replace)
+      entry.rename(entry.name.replace(options.search, options.replace))
     })
     resolve(tree)
   })
@@ -54,7 +54,7 @@ export const compoundWords = createTransformer(defaultCompundWordsOptions, (tree
   }
   return new Promise((resolve, reject) => {
     tree.transformEntries((entry) => {
-      entry.name = transformFunction(entry.name)
+      entry.rename(transformFunction(entry.name))
     })
     resolve(tree)
   })
@@ -67,7 +67,7 @@ export const autoname = createTransformer(defaultAutonameOptions, {scope: ['Colo
   ntc.init(options.pool)
   return new Promise((resolve, reject) => {
     tree.transformEntries((entry) => {
-      entry.name = ntc.name(entry.hexcolor())[1]
+      entry.rename(ntc.name(entry.hexcolor())[1])
     })
     resolve(tree)
   })
