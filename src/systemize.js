@@ -40,12 +40,16 @@ export const abstractRepeating = createTransformer(defaultAbstractRepeatingOptio
     let addedColors = 0
     let paletteForExtractedColors = tree
     if (options.palette) {
-      let existingPalette = tree.get(options.palette)
-      if (existingPalette) {
-        paletteForExtractedColors = existingPalette
+      if (tree.children.every((entry) => entry.type === 'Color' || entry.type === 'Reference')) {
+        // save renderer, only swatchentries: do not allow creation of sub-palette for extracted
       } else {
-        paletteForExtractedColors = new oco.Entry(options.palette.replace('.', ''), [], 'Palette')
-        tree.addChild(paletteForExtractedColors, false, 0)
+        let existingPalette = tree.get(options.palette)
+        if (existingPalette) {
+          paletteForExtractedColors = existingPalette
+        } else {
+          paletteForExtractedColors = new oco.Entry(options.palette.replace('.', ''), [], 'Palette')
+          tree.addChild(paletteForExtractedColors, false, 0)
+        }
       }
     }
     Object.keys(entryLookup).forEach((k, index) => {

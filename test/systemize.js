@@ -11,17 +11,6 @@ describe('Systemize Transformer', () => {
     xit('should autoname extracted values', () => {})
   })
   describe('abstract repeating', () => {
-    it('should extract repeating color values into a palette', () => {
-      var ocoString = `
-color a: #FFF
-color b: #FFF
-`
-      return abstractRepeating(oco.parse(ocoString), {palette: 'palette'})
-        .then((transformed) => {
-          expect(transformed.get('palette.color1').hexcolor()).to.equal('#FFFFFF')
-          expect(transformed.get('color a').refName).to.equal('palette.color1')
-        })
-    })
     it('should extract repeating color values', () => {
       var ocoString = `
 color a: #FFF
@@ -114,6 +103,33 @@ color e: #000
           expect(transformed.get('color a').refName).to.equal('windows blue')
           expect(transformed.get('color b').type).to.equal('Reference')
           expect(transformed.get('color b').refName).to.equal('black')
+        })
+    })
+    it('should not allow sub-palette if there are no other sub-palettes', () => {
+      var ocoString = `
+color a: #3778BF
+color b: #000
+color c: #3778BF
+color d: #3778BF
+color e: #000
+`
+      return abstractRepeating(oco.parse(ocoString), {autoname: false, palette: 'extracted'})
+        .then((transformed) => {
+          expect(transformed.get('color1').hexcolor()).to.equal('#3778BF')
+        })
+    })
+    it('should create sub-palette if there are other sub-palettes', () => {
+      var ocoString = `
+other:
+  color a: #3778BF
+  color b: #000
+  color c: #3778BF
+  color d: #3778BF
+  color e: #000
+`
+      return abstractRepeating(oco.parse(ocoString), {autoname: false, palette: 'extracted'})
+        .then((transformed) => {
+          expect(transformed.get('extracted.color1').hexcolor()).to.equal('#3778BF')
         })
     })
     it('should autoname extracted values without duplicate names', () => {
