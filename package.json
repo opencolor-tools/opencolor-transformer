@@ -37,7 +37,7 @@
   "dependencies": {
     "humanize-string": "^1.0.1",
     "lodash": "^4.12.0",
-    "opencolor": "opencolor-tools/opencolor-js#v0.0.14",
+    "opencolor": "opencolor-tools/opencolor-js#v0.0.15",
     "tinycolor2": "^1.3.0"
   },
   "config": {

@@ -37,7 +37,15 @@ export const searchAndReplace = createTransformer(defaultSearchAndReplaceOptions
 
   return new Promise((resolve, reject) => {
     tree.transformEntries((entry) => {
-      entry.rename(entry.name.replace(options.search, options.replace))
+      let path = entry.path()
+      let newPath = path.replace(options.search, options.replace)
+      if (newPath !== path) {
+        if (newPath.indexOf('.') !== false) {
+          entry.moveTo(newPath)
+        } else {
+          entry.rename(newPath)
+        }
+      }
     })
     resolve(tree)
   })

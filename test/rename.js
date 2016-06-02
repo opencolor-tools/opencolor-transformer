@@ -24,6 +24,55 @@ describe('Rename Transformer', () => {
       })
     })
 
+    it('should rename groups and maintain references', () => {
+      const tree = oco.parse(`Greys:
+  Subtle Grey: #FAFAFA
+Day Theme:
+  oct/:
+    backgroundColor: =Background
+  Background: =Greys.Subtle Grey`
+)
+      return searchAndReplace(tree, {
+        search: 'Greys',
+        replace: 'xxx'
+      }).then((transformed) => {
+        // console.log(transformed.toString())
+        expect(transformed.get('Day Theme.Background').refName).to.equal('xxx.Subtle Grey')
+      })
+    })
+
+    it('should levae palette intact, when nonsense options specified', () => {
+      const tree = oco.parse(`Greys:
+  Subtle Grey: #FAFAFA
+Day Theme:
+  oct/:
+    backgroundColor: =Background
+  Background: =Greys.Subtle Grey`
+)
+      return searchAndReplace(tree, {
+        search: null,
+        replace: null
+      }).then((transformed) => {
+        expect(transformed.get('Day Theme.Background').refName).to.equal('Greys.Subtle Grey')
+      })
+    })
+
+    it('should rename colors in groups and maintain references', () => {
+      const tree = oco.parse(`Greys:
+  Subtle Grey: #FAFAFA
+Day Theme:
+  oct/:
+    backgroundColor: =Background
+  Background: =Greys.Subtle Grey`
+)
+      return searchAndReplace(tree, {
+        search: 'Subtle',
+        replace: 'xxx'
+      }).then((transformed) => {
+        expect(transformed.get('Day Theme.Background').refName).to.equal('Greys.xxx Grey')
+      })
+    })
+
     it('should rename all entry names based on search and replace', () => {
       const tree = oco.parse(simplePaletteOcoString)
       return searchAndReplace(tree, {
