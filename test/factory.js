@@ -39,8 +39,8 @@ palette:
 `
       var tree = oco.parse(ocoString)
       return configuredTransformer(tree).then((transformedTree) => {
-        expect(transformedTree.metadata).to.deep.equal({'ns/metakey': 'value'})
-        expect(transformedTree.get('palette - transformed').metadata).to.deep.equal({'ns/metakey': 'value'})
+        expect(transformedTree.metadata.toString()).to.equal('{"ns/metakey":"value"}')
+        expect(transformedTree.get('palette - transformed').metadata.toString()).to.equal('{"ns/metakey":"value"}')
       })
     })
   })
