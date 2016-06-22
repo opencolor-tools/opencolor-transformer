@@ -1,6 +1,6 @@
 /* eslint-env mocha */
 import {expect} from 'chai'
-import oco from 'opencolor'
+import {parse} from 'opencolor'
 import {compoundWords, group, autoname} from '../lib'
 
 describe('Combining Transformer Example', () => {
@@ -13,7 +13,7 @@ FacebookColor0: #3b5998
 IKEAYellow: #ffcc00
 IKEABlue: #003399
 `
-    const tree = oco.parse(ocoString)
+    const tree = parse(ocoString)
     return compoundWords.configure({transform: 'humanize'})(tree)
       .then(group.configure({separator: ' ', maxDepth: 1}))
       .then(autoname.configure({filter: /color.*/}))
