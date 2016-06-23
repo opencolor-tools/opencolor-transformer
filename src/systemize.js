@@ -1,6 +1,6 @@
 import {createTransformer} from './factory'
 import {ntc} from './utils/ntc'
-import oco from 'opencolor'
+import {Entry, Reference} from 'opencolor'
 
 const defaultAbstractRepeatingOptions = {
   occurences: 2,
@@ -47,7 +47,7 @@ export const abstractRepeating = createTransformer(defaultAbstractRepeatingOptio
         if (existingPalette) {
           paletteForExtractedColors = existingPalette
         } else {
-          paletteForExtractedColors = new oco.Entry(options.palette.replace('.', ''), [], 'Palette')
+          paletteForExtractedColors = new Entry(options.palette.replace('.', ''), [], 'Palette')
           tree.addChild(paletteForExtractedColors, false, 0)
         }
       }
@@ -63,7 +63,7 @@ export const abstractRepeating = createTransformer(defaultAbstractRepeatingOptio
       const newPath = newColorEntry.path()
       entryLookup[k].forEach((entry) => {
         const path = entry.path()
-        const newRefrenceEntry = new oco.Reference(entry.name, newPath)
+        const newRefrenceEntry = new Reference(entry.name, newPath)
         tree.set(path, newRefrenceEntry)
       })
     })

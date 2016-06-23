@@ -1,6 +1,6 @@
 /* eslint-env mocha */
 import chai, {expect} from 'chai'
-import oco from 'opencolor'
+import {parse} from 'opencolor'
 import {searchAndReplace, compoundWords, autoname} from '../src/rename'
 import fs from 'fs'
 import path from 'path'
@@ -13,7 +13,7 @@ describe('Rename Transformer', () => {
 
   describe('Search and Replace', () => {
     it('should rename color names based on search and replace', () => {
-      const tree = oco.parse(simpleOcoString)
+      const tree = parse(simpleOcoString)
       return searchAndReplace(tree, {
         search: 'colornameA',
         replace: 'colornameX'
@@ -25,7 +25,7 @@ describe('Rename Transformer', () => {
     })
 
     it('should rename groups and maintain references', () => {
-      const tree = oco.parse(`Greys:
+      const tree = parse(`Greys:
   Subtle Grey: #FAFAFA
 Day Theme:
   oct/:
@@ -42,7 +42,7 @@ Day Theme:
     })
 
     it('should levae palette intact, when nonsense options specified', () => {
-      const tree = oco.parse(`Greys:
+      const tree = parse(`Greys:
   Subtle Grey: #FAFAFA
 Day Theme:
   oct/:
@@ -58,7 +58,7 @@ Day Theme:
     })
 
     it('should rename colors in groups and maintain references', () => {
-      const tree = oco.parse(`Greys:
+      const tree = parse(`Greys:
   Subtle Grey: #FAFAFA
 Day Theme:
   oct/:
@@ -74,7 +74,7 @@ Day Theme:
     })
 
     it('should rename all entry names based on search and replace', () => {
-      const tree = oco.parse(simplePaletteOcoString)
+      const tree = parse(simplePaletteOcoString)
       return searchAndReplace(tree, {
         search: 'A',
         replace: 'X'
@@ -89,11 +89,11 @@ Day Theme:
 
   describe('Compound Words', () => {
     it('should reject unknown transform options', () => {
-      return expect(compoundWords(oco.parse('colorA: #FFF'), {transform: 'XXX'})).to.be.rejectedWith(Error)
+      return expect(compoundWords(parse('colorA: #FFF'), {transform: 'XXX'})).to.be.rejectedWith(Error)
     })
 
     it('should dasherize', () => {
-      const tree = oco.parse('colorA: #FFF')
+      const tree = parse('colorA: #FFF')
       return compoundWords(tree, {
         transform: 'dasherize'
       }).then((transformed) => {
@@ -102,7 +102,7 @@ Day Theme:
     })
 
     it('should humanize', () => {
-      const tree = oco.parse('CÜlá--r: #FFF')
+      const tree = parse('CÜlá--r: #FFF')
       return compoundWords(tree, {
         transform: 'humanize'
       }).then((transformed) => {
@@ -111,7 +111,7 @@ Day Theme:
     })
 
     it('should clean', () => {
-      const tree = oco.parse('CÜlá--r: #FFF')
+      const tree = parse('CÜlá--r: #FFF')
       return compoundWords(tree, {
         transform: 'clean'
       }).then((transformed) => {
@@ -120,7 +120,7 @@ Day Theme:
     })
 
     it('should camelcase', () => {
-      const tree = oco.parse('color-a: #FFF')
+      const tree = parse('color-a: #FFF')
       return compoundWords(tree, {
         transform: 'camelize'
       }).then((transformed) => {
@@ -129,7 +129,7 @@ Day Theme:
     })
 
     it('should lowdasherize', () => {
-      const tree = oco.parse('color a: #FFF')
+      const tree = parse('color a: #FFF')
       return compoundWords(tree, {
         transform: 'lowdasherize'
       }).then((transformed) => {
@@ -138,7 +138,7 @@ Day Theme:
     })
 
     it('should capitalize', () => {
-      const tree = oco.parse('color a: #FFF')
+      const tree = parse('color a: #FFF')
       return compoundWords(tree, {
         transform: 'capitalize'
       }).then((transformed) => {
@@ -147,7 +147,7 @@ Day Theme:
     })
 
     it('should uppercase', () => {
-      const tree = oco.parse('color a: #FFF')
+      const tree = parse('color a: #FFF')
       return compoundWords(tree, {
         transform: 'uppercase'
       }).then((transformed) => {
@@ -156,7 +156,7 @@ Day Theme:
     })
 
     it('should lowercase', () => {
-      const tree = oco.parse('ColoR A: #FFF')
+      const tree = parse('ColoR A: #FFF')
       return compoundWords(tree, {
         transform: 'lowercase'
       }).then((transformed) => {
@@ -168,48 +168,48 @@ Day Theme:
   describe('Autoname', () => {
     it('should name colors', () => {
       return Promise.all([
-        autoname(oco.parse('color a: #3778bf')).then((transformed) => {
+        autoname(parse('color a: #3778bf')).then((transformed) => {
           expect(transformed.children[0].name).to.equal('windows blue')
         }),
-        autoname(oco.parse('color a: #3778be')).then((transformed) => {
+        autoname(parse('color a: #3778be')).then((transformed) => {
           expect(transformed.children[0].name).to.equal('windows blue')
         }),
-        autoname(oco.parse('color a: #3778bd')).then((transformed) => {
+        autoname(parse('color a: #3778bd')).then((transformed) => {
           expect(transformed.children[0].name).to.equal('windows blue')
         }),
-        autoname(oco.parse('color a: #FFF')).then((transformed) => {
+        autoname(parse('color a: #FFF')).then((transformed) => {
           expect(transformed.children[0].name).to.equal('white')
         })
       ])
     })
     it('should support name pool ntc', () => {
       return Promise.all([
-        autoname(oco.parse('color a: #3778bf'), {pool: 'ntc'}).then((transformed) => {
+        autoname(parse('color a: #3778bf'), {pool: 'ntc'}).then((transformed) => {
           expect(transformed.children[0].name).to.equal('Boston Blue')
         }),
-        autoname(oco.parse('color a: #3778be'), {pool: 'ntc'}).then((transformed) => {
+        autoname(parse('color a: #3778be'), {pool: 'ntc'}).then((transformed) => {
           expect(transformed.children[0].name).to.equal('Boston Blue')
         }),
-        autoname(oco.parse('color a: #3778bd'), {pool: 'ntc'}).then((transformed) => {
+        autoname(parse('color a: #3778bd'), {pool: 'ntc'}).then((transformed) => {
           expect(transformed.children[0].name).to.equal('Boston Blue')
         }),
-        autoname(oco.parse('color a: #FFF')).then((transformed) => {
+        autoname(parse('color a: #FFF')).then((transformed) => {
           expect(transformed.children[0].name).to.equal('white')
         })
       ])
     })
     it('should support name pool css', () => {
       return Promise.all([
-        autoname(oco.parse('color a: #008B8B'), {pool: 'css'}).then((transformed) => {
+        autoname(parse('color a: #008B8B'), {pool: 'css'}).then((transformed) => {
           expect(transformed.children[0].name).to.equal('darkcyan')
         }),
-        autoname(oco.parse('color a: #008B8C'), {pool: 'css'}).then((transformed) => {
+        autoname(parse('color a: #008B8C'), {pool: 'css'}).then((transformed) => {
           expect(transformed.children[0].name).to.equal('darkcyan')
         }),
-        autoname(oco.parse('color a: #008B8D'), {pool: 'css'}).then((transformed) => {
+        autoname(parse('color a: #008B8D'), {pool: 'css'}).then((transformed) => {
           expect(transformed.children[0].name).to.equal('darkcyan')
         }),
-        autoname(oco.parse('color a: #FFF')).then((transformed) => {
+        autoname(parse('color a: #FFF')).then((transformed) => {
           expect(transformed.children[0].name).to.equal('white')
         })
       ])

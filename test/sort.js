@@ -1,6 +1,6 @@
 /* eslint-env mocha */
 import chai, {expect} from 'chai'
-import oco from 'opencolor'
+import {parse} from 'opencolor'
 import {sort} from '../src/sort'
 import chaiAsPromised from 'chai-as-promised'
 chai.use(chaiAsPromised)
@@ -13,7 +13,7 @@ mygroup:
   color a: #00FF00
   color b: #FF0000
 `
-      return sort(oco.parse(ocoString), {sortBy: 'hue', order: 'asc'})
+      return sort(parse(ocoString), {sortBy: 'hue', order: 'asc'})
         .then((transformed) => {
           expect(transformed.get('mygroup').children[0].name).to.equal('color b')
           expect(transformed.get('mygroup').children[1].name).to.equal('color a')
@@ -25,7 +25,7 @@ mygroup:
   color a: #FF0000
   color b: #00FF00
 `
-      return sort(oco.parse(ocoString), {sortBy: 'hue', order: 'desc'})
+      return sort(parse(ocoString), {sortBy: 'hue', order: 'desc'})
         .then((transformed) => {
           expect(transformed.get('mygroup').children[0].name).to.equal('color b')
           expect(transformed.get('mygroup').children[1].name).to.equal('color a')
@@ -36,7 +36,7 @@ mygroup:
 color a: #00FF00
 color b: #FF0000
 `
-      return sort(oco.parse(ocoString), {sortBy: 'hue', order: 'asc'})
+      return sort(parse(ocoString), {sortBy: 'hue', order: 'asc'})
         .then((transformed) => {
           expect(transformed.children[0].name).to.equal('color b')
           expect(transformed.children[1].name).to.equal('color a')
@@ -50,7 +50,7 @@ mygroup:
   color a: #FF0000
   color b: #333333
 `
-      return sort(oco.parse(ocoString), {sortBy: 'saturation', order: 'asc'})
+      return sort(parse(ocoString), {sortBy: 'saturation', order: 'asc'})
         .then((transformed) => {
           expect(transformed.get('mygroup').children[0].name).to.equal('color b')
           expect(transformed.get('mygroup').children[1].name).to.equal('color a')
@@ -62,7 +62,7 @@ mygroup:
   color a: #333333
   color b: #FF0000
 `
-      return sort(oco.parse(ocoString), {sortBy: 'saturation', order: 'desc'})
+      return sort(parse(ocoString), {sortBy: 'saturation', order: 'desc'})
         .then((transformed) => {
           expect(transformed.get('mygroup').children[0].name).to.equal('color b')
           expect(transformed.get('mygroup').children[1].name).to.equal('color a')
@@ -74,7 +74,7 @@ mygroup:
 color a: #FF0000
 color b: #333333
 `
-      return sort(oco.parse(ocoString), {sortBy: 'saturation', order: 'asc'})
+      return sort(parse(ocoString), {sortBy: 'saturation', order: 'asc'})
         .then((transformed) => {
           expect(transformed.children[0].name).to.equal('color b')
           expect(transformed.children[1].name).to.equal('color a')
@@ -88,7 +88,7 @@ mygroup:
   color a: #FFFFFF
   color b: #000000
 `
-      return sort(oco.parse(ocoString), {sortBy: 'value', order: 'asc'})
+      return sort(parse(ocoString), {sortBy: 'value', order: 'asc'})
         .then((transformed) => {
           expect(transformed.get('mygroup').children[0].name).to.equal('color b')
           expect(transformed.get('mygroup').children[1].name).to.equal('color a')
@@ -100,7 +100,7 @@ mygroup:
   color a: #000000
   color b: #FFFFFF
 `
-      return sort(oco.parse(ocoString), {sortBy: 'value', order: 'desc'})
+      return sort(parse(ocoString), {sortBy: 'value', order: 'desc'})
         .then((transformed) => {
           expect(transformed.get('mygroup').children[0].name).to.equal('color b')
           expect(transformed.get('mygroup').children[1].name).to.equal('color a')
@@ -111,7 +111,7 @@ mygroup:
 color a: #FFFFFF
 color b: #000000
 `
-      return sort(oco.parse(ocoString), {sortBy: 'value', order: 'asc'})
+      return sort(parse(ocoString), {sortBy: 'value', order: 'asc'})
         .then((transformed) => {
           expect(transformed.children[0].name).to.equal('color b')
           expect(transformed.children[1].name).to.equal('color a')

@@ -1,6 +1,6 @@
 /* eslint-env mocha */
 import chai, {expect} from 'chai'
-import oco from 'opencolor'
+import {parse} from 'opencolor'
 import {createTransformer} from '../src/factory'
 import fs from 'fs'
 import path from 'path'
@@ -21,11 +21,11 @@ describe('Transformer Factory', () => {
   describe('Configurable Transformer', () => {
     it('should be configurabel', () => {
       var configuredTransformer = testTransformer.configure({})
-      expect(configuredTransformer(oco.parse('colorA: #FFF'))).to.be.fullfilled
+      expect(configuredTransformer(parse('colorA: #FFF'))).to.be.fullfilled
     })
     it('should be configurabel with options', () => {
       var configuredTransformer = testTransformer.configure({scope: 'XXX'})
-      expect(configuredTransformer(oco.parse('colorA: #FFF'))).to.be.rejectedWith(Error)
+      expect(configuredTransformer(parse('colorA: #FFF'))).to.be.rejectedWith(Error)
     })
   })
   describe('Transformed Trees', () => {
@@ -37,7 +37,7 @@ palette:
   ns/metakey: value
   one: #111111
 `
-      var tree = oco.parse(ocoString)
+      var tree = parse(ocoString)
       return configuredTransformer(tree).then((transformedTree) => {
         expect(transformedTree.metadata.toString()).to.equal('{"ns/metakey":"value"}')
         expect(transformedTree.get('palette - transformed').metadata.toString()).to.equal('{"ns/metakey":"value"}')
@@ -47,19 +47,19 @@ palette:
   describe('Scoping and Filters', () => {
     it('should allow scoping on Color, Palette and Reference', () => {
       return Promise.all([
-        expect(testTransformer(oco.parse('colorA: #FFF'), {scope: 'Color'})).to.be.fullfilled,
-        expect(testTransformer(oco.parse('colorA: #FFF'), {scope: 'Palette'})).to.be.fullfilled,
-        expect(testTransformer(oco.parse('colorA: #FFF'), {scope: 'Reference'})).to.be.fullfilled
+        expect(testTransformer(parse('colorA: #FFF'), {scope: 'Color'})).to.be.fullfilled,
+        expect(testTransformer(parse('colorA: #FFF'), {scope: 'Palette'})).to.be.fullfilled,
+        expect(testTransformer(parse('colorA: #FFF'), {scope: 'Reference'})).to.be.fullfilled
       ])
     })
     it('should allow multiple scoping', () => {
-      return expect(testTransformer(oco.parse('colorA: #FFF'), {scope: ['Color', 'Palette']})).to.be.fullfilled
+      return expect(testTransformer(parse('colorA: #FFF'), {scope: ['Color', 'Palette']})).to.be.fullfilled
     })
     it('should reject unknown scoping options', () => {
-      return expect(testTransformer(oco.parse('colorA: #FFF'), {scope: 'XXX'})).to.be.rejectedWith(Error)
+      return expect(testTransformer(parse('colorA: #FFF'), {scope: 'XXX'})).to.be.rejectedWith(Error)
     })
     it('should filter entry names with string', () => {
-      const tree = oco.parse(simplePaletteOcoString)
+      const tree = parse(simplePaletteOcoString)
       return testTransformer(tree, {
         filter: 'colorname'
       }).then((transformed) => {
@@ -69,7 +69,7 @@ palette:
       })
     })
     it('should filter entry names with regexp', () => {
-      const tree = oco.parse(simplePaletteOcoString)
+      const tree = parse(simplePaletteOcoString)
       return testTransformer(tree, {
         filter: /colorname[AB]/
       }).then((transformed) => {
@@ -80,7 +80,7 @@ palette:
       })
     })
     it('should only effect entries inside the scope', () => {
-      const tree = oco.parse(simplePaletteOcoString)
+      const tree = parse(simplePaletteOcoString)
       return testTransformer(tree, {
         scope: ['Color']
       }).then((transformed) => {
@@ -90,7 +90,7 @@ palette:
       })
     })
     it('should support enforcedOptions', () => {
-      const tree = oco.parse(simplePaletteOcoString)
+      const tree = parse(simplePaletteOcoString)
 
       const testTransformerWithEnforcedScope = createTransformer({}, {scope: ['Color']}, (tree, options) => {
         return new Promise((resolve, reject) => {
