@@ -1,5 +1,7 @@
 # Open Color Tools Transformer
 
+Build status: ![Build Status](https://travis-ci.org/opencolor-tools/opencolor-transformer.svg?branch=master)
+
 – Work in Progess –
 
 Open Color Transformers help to transform existing color palettes defined in the Open Color File Format and will be released as node module soon.
